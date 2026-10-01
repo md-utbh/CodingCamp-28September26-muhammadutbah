@@ -1,0 +1,78 @@
+# ===================================
+# OS & Editor
+# ===================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Windows Explorer thumbnail cache
+*.lnk
+
+# ===================================
+# Editors & IDEs
+# ===================================
+.vscode/
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*~
+
+# ===================================
+# Kiro IDE
+# ===================================
+# Keep .kiro/steering — it documents the project and is intentionally committed.
+# Exclude session/cache artifacts if Kiro ever creates them.
+.kiro/cache/
+.kiro/sessions/
+.kiro/tmp/
+
+# ===================================
+# Node / npm (not used in this project,
+# but guard against accidental init)
+# ===================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.npm
+.pnpm-store/
+
+# ===================================
+# Build output (not applicable here,
+# but future-proofed)
+# ===================================
+dist/
+build/
+out/
+
+# ===================================
+# Environment & Secrets
+# ===================================
+.env
+.env.*
+*.env
+secrets.*
+credentials.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ===================================
+# Logs & Temp
+# ===================================
+*.log
+*.tmp
+*.temp
+.cache/

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expense & Budget Visualizer — Track your daily spending with category charts, spending limits, and more.">
+    <title>Expense & Budget Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="header-title">Expense Tracker</h1>
+                <p class="header-subtitle">Track your daily spending</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+                <span class="theme-icon" id="themeIcon">☀️</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="container" id="main">
+
+        <!-- Total Spending Card -->
+        <section class="card total-card" id="totalCard" aria-label="Total spending summary">
+            <p class="total-label">Total Spending</p>
+            <p class="total-amount" id="totalAmount">Rp0</p>
+        </section>
+
+        <!-- Spending Limit -->
+        <section class="card limit-card" id="limitCard" aria-label="Spending limit">
+            <div class="limit-header">
+                <h2 class="section-title">Monthly Spending Limit</h2>
+                <button class="limit-edit-btn" id="limitEditBtn" type="button" aria-label="Edit spending limit">✏️</button>
+            </div>
+            <div class="limit-display" id="limitDisplay">
+                <p class="limit-amount" id="limitAmountDisplay">No limit set</p>
+            </div>
+            <form class="limit-form hidden" id="limitForm" aria-label="Set spending limit">
+                <div class="limit-input-group">
+                    <label for="limitInput" class="sr-only">Spending limit amount</label>
+                    <span class="input-prefix">Rp</span>
+                    <input type="number" id="limitInput" class="limit-input" placeholder="e.g. 2000000" min="0" step="1000" aria-label="Enter spending limit in Rupiah">
+                </div>
+                <p class="form-error hidden" id="limitInputError"></p>
+                <div class="limit-actions">
+                    <button type="submit" class="btn btn-sm btn-primary" id="limitSaveBtn">Save</button>
+                    <button type="button" class="btn btn-sm btn-ghost" id="limitCancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="limitRemoveBtn">Remove</button>
+                </div>
+            </form>
+            <div class="limit-progress-wrap hidden" id="limitProgressWrap">
+                <div class="limit-progress-bar" id="limitProgressBar">
+                    <div class="limit-progress-fill" id="limitProgressFill"></div>
+                </div>
+                <p class="limit-status" id="limitStatus"></p>
+            </div>
+        </section>
+
+        <!-- Desktop layout wrapper -->
+        <div class="two-col">
+
+            <!-- Spending Overview (Chart) -->
+            <section class="card chart-card" aria-label="Spending overview chart">
+                <h2 class="section-title">Spending Overview</h2>
+                <div class="chart-container" id="chartContainer">
+                    <canvas id="expenseChart" aria-label="Doughnut chart showing expense distribution by category"></canvas>
+                    <p class="chart-empty hidden" id="chartEmpty">No data to display yet.<br>Add a transaction to see your spending breakdown.</p>
+                </div>
+            </section>
+
+            <!-- Add Transaction Form -->
+            <section class="card form-card" aria-label="Add a new transaction">
+                <h2 class="section-title">Add Transaction</h2>
+                <form id="transactionForm" novalidate>
+                    <div class="form-group">
+                        <label for="itemName" class="form-label">Item Name</label>
+                        <input type="text" id="itemName" class="form-input" placeholder="e.g. Nasi Goreng" autocomplete="off" required>
+                        <p class="form-error hidden" id="itemNameError"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" class="form-label">Amount (Rp)</label>
+                        <input type="number" id="amount" class="form-input" placeholder="e.g. 25000" min="1" step="500" required>
+                        <p class="form-error hidden" id="amountError"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" class="form-input form-select" required>
+                            <option value="" disabled selected>Select category</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Fun">Fun</option>
+                        </select>
+                        <p class="form-error hidden" id="categoryError"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="addTransactionBtn">
+                        <span aria-hidden="true">+</span> Add Transaction
+                    </button>
+                </form>
+                <!-- Toast -->
+                <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+            </section>
+
+        </div>
+
+        <!-- Transactions List -->
+        <section class="card transactions-card" aria-label="Transaction history">
+            <div class="transactions-header">
+                <h2 class="section-title">Transactions</h2>
+                <div class="sort-control">
+                    <label for="sortSelect" class="sr-only">Sort transactions</label>
+                    <select id="sortSelect" class="sort-select" aria-label="Sort transactions">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="highest">Highest</option>
+                        <option value="lowest">Lowest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="transaction-list" id="transactionList" role="list">
+                <!-- Transactions rendered by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Expense Tracker. Built with ❤️</p>
+    </footer>
+
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
